@@ -81,6 +81,11 @@ public static class UpdateService
             throw new InvalidOperationException("Installername stimmt nicht mit der Releaseversion überein.");
         if (Uri.UnescapeDataString(sumsUri.Segments.Last()) != "SHA256SUMS.txt")
             throw new InvalidOperationException("Unzulässiger Name der Prüfsummendatei.");
+        // Beide Dateien muessen aus dem vom API-Release angegebenen Versionstag stammen.
+        string expectedReleasePath = $"/releases/download/v{release.Version.Major}.{release.Version.Minor}.{release.Version.Build}/";
+        if (!installerUri.AbsolutePath.Contains(expectedReleasePath, StringComparison.OrdinalIgnoreCase) ||
+            !sumsUri.AbsolutePath.Contains(expectedReleasePath, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Release-Assets passen nicht zum freigegebenen Versionstag.");
         // Die beiden Dateien muessen zum selben GitHub-Release gehoeren.
         if (!installerUri.AbsolutePath.Contains("/releases/download/", StringComparison.OrdinalIgnoreCase) ||
             !sumsUri.AbsolutePath.Contains("/releases/download/", StringComparison.OrdinalIgnoreCase) ||

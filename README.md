@@ -1,20 +1,30 @@
 # CM Gefährdungsbeurteilung
 
-Windows-Desktopsoftware zur Erstellung und Verwaltung von Gefährdungsbeurteilungen für Wasser- und Brandschadensanierung.
+Windows-Desktopprogramm zur Erstellung und Dokumentation von Gefährdungsbeurteilungen für die Wasser- und Brandschadensanierung.
 
-## Entwicklungsstand
+## Aktueller Entwicklungsstand
 
-- Lokaler Windows-Build: 0.1.3 / Build 0001 (vom Anwender erfolgreich als EXE erstellt)
-- GitHub-Quellcodeübernahme: ausstehend
-- Zielplattform: Windows 10/11, C# / WPF / .NET 10, SQLite
-- Windows-Setup: Inno Setup 7
-- Updatefähigkeit mit Datenerhalt ist verbindliche Anforderung.
+- **Quellcode:** 0.1.13 / Build 0001 (Windows-Test noch ausstehend)
+- **Bestätigter Bedienstand:** 0.1.11 (Anwenderprüfung PASS)
+- **Technik:** C# / WPF / .NET 10 / SQLite / Inno Setup
+- **Updateverfahren ab 0.1.13:** lokale, vom Benutzer ausgewählte `.cmupdate`-Datei – kein Internet zum Installieren erforderlich
+- **Datenbank:** Schema 3, Nutzerdaten vom Installationsordner getrennt
+- **Fachliche Einträge:** Entwürfe, keine automatisch freigegebenen Gefährdungsbeurteilungen
 
-## Nächste Schritte
+## Windows-Setup und Update-Dateien
 
-1. Den vollständigen lokalen Projektordner `D:\cm-beurteilung` übernehmen, **ohne** `bin/`, `obj/`, lokale Datenbanken, Zugangsdaten oder Zertifikatsschlüssel.
-2. GitHub Actions für Build, Tests und Setup-Artefakte einrichten.
-3. Release- und Updateprozess mit signierten Installern, Prüfsummen und gesicherten Datenbankmigrationen testen.
-4. Fachkataloge, Berichtsausgabe und Bedienoberfläche weiterentwickeln.
+[GitHub Actions – Windows Setup](https://github.com/ceromihalik-dev/Cm-Gefaehrdungsbeurteilung/actions/workflows/windows-build.yml) erstellt als Testartefakt:
 
-**Hinweis:** Vor fachlichem Einsatz müssen Vorlagen und Gefährdungsbeurteilungen sachkundig geprüft werden.
+- `CM-Gefaehrdungsbeurteilung-Setup-<Version>.exe`
+- `CM-Gefaehrdungsbeurteilung-Update-<Version>.cmupdate`
+- SHA-256-Prüfsummendateien
+
+**Einmalig:** Version 0.1.13 muss noch per Setup.exe installiert werden, da ältere Versionen keine lokale Update-Datei importieren können. Danach kann eine neuere `.cmupdate` über **Updates → Update-Datei auswählen und prüfen** eingelesen werden.
+
+**Sicherheit:** Eine SHA-256-Prüfsumme belegt die Integrität des Paketinhalts, nicht die Identität des Herausgebers. Unsignierte Pakete nur aus einer eigenständig geprüften Quelle und mit ausdrücklicher Bestätigung installieren. Es gibt keine stille Ausführung von Update-Dateien.
+
+[Anleitung für Datei-Updates](docs/DATEI_UPDATES.md) · [Changelog](CHANGELOG.md)
+
+## Fachlicher Hinweis
+
+Die Gefährdungsvorschläge sind nicht abschließend. Vor Einsatz und Unterzeichnung müssen die objektspezifischen Gefährdungen und Maßnahmen durch eine fachkundige verantwortliche Person beurteilt werden.

@@ -61,10 +61,10 @@ public partial class MainWindow : Window
         if (string.IsNullOrWhiteSpace(owner) || string.IsNullOrWhiteSpace(repo)) return;
         if (DateTime.TryParse(_storage.GetSetting("updates.lastCheckUtc"), out var last) &&
             DateTime.UtcNow - last.ToUniversalTime() < TimeSpan.FromDays(1)) return;
-        _storage.SetSetting("updates.lastCheckUtc", DateTime.UtcNow.ToString("O"));
         try
         {
             _latestRelease = await UpdateService.GetLatestAsync(owner, repo);
+            _storage.SetSetting("updates.lastCheckUtc", DateTime.UtcNow.ToString("O"));
             if (_latestRelease.Version > UpdateService.CurrentVersion &&
                 MessageBox.Show($"Eine neue Version {_latestRelease.Version} ist verfügbar. Updateinformationen anzeigen?",
                     "Neues Update", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
@@ -516,10 +516,13 @@ public partial class MainWindow : Window
         CheckUpdateButton.IsEnabled = false;
         InstallUpdateButton.IsEnabled = false;
         OpenReleaseButton.IsEnabled = false;
+        _latestRelease = null;
+        UpdateNotes.Text = "";
         UpdateStatus.Text = "Suche nach einem Release ...";
         try
         {
             _latestRelease = await UpdateService.GetLatestAsync(_storage.GetSetting("repo.owner"), _storage.GetSetting("repo.name"));
+            _storage.SetSetting("updates.lastCheckUtc", DateTime.UtcNow.ToString("O"));
             OpenReleaseButton.IsEnabled = true;
             bool newer = _latestRelease.Version > UpdateService.CurrentVersion;
             UpdateStatus.Text = newer ? $"Neue Version {_latestRelease.Version} verfügbar." : $"Kein neueres Release. Letzte Veröffentlichung: {_latestRelease.Version}.";

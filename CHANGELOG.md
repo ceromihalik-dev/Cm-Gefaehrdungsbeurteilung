@@ -1,5 +1,17 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.13 / Build 0001 – 14.10.2026
+**Status: Quellcode auf GitHub; Windows-Build und Import-/Installationstest noch ausstehend.**
+
+- Updatefunktion auf manuell importierte, offline verwendbare .cmupdate-Dateien umgestellt; keine GitHub-Releaseabfrage beim Programmstart.
+- Neue Schaltfläche "Update-Datei auswählen und prüfen".
+- Lokale Update-Datei ist ein ZIP-Paket mit manifest.json und zur Version passender Setup.exe.
+- Die Anwendung prüft Paketformat, Versionssprung und SHA-256-Prüfsumme vor und nach dem Entpacken; bei Fehlern wird abgebrochen.
+- Vor Installation ausdrückliche Benutzerbestätigung und lokale SQLite-Datensicherung.
+- GitHub Actions erstellt zusätzlich zur Setup.exe eine .cmupdate-Datei mit Paketprüfsumme und validiert das Paket.
+- Keine kommerziellen Zertifikate nötig für diesen explizit manuellen Ablauf. SHA-256 bestätigt keine Herausgeberidentität; bei unsignierten Paketen ist die vertrauenswürdige Herkunft manuell zu prüfen.
+- Datenbankschema unverändert 3.
+
 ## 0.1.12 / Build 0001 – 14.10.2026
 **Status: Update-Freigabe vorbereitet; Windows-Test und signierter Freigabetest stehen aus.**
 

@@ -1,5 +1,14 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.12 / Build 0001 – 14.10.2026
+**Status: Update-Freigabe vorbereitet; Windows-Test und signierter Freigabetest stehen aus.**
+
+- Download nur aus den zur Releaseversion passenden GitHub-Assetpfaden zulassen.
+- Neues Herausgeber-Skript scripts/Publish-SignedRelease.ps1 mit obligatorischer Authenticode- und Prüfsummenprüfung, standardmäßig ohne Veröffentlichung (Dry Run).
+- Veröffentlichung über GitHub CLI nur nach ausdrücklichem -Publish; vorhandene Tags/Releases werden nicht überschrieben.
+- Automatische Installation unsignierter Entwicklungsbuilds bleibt deaktiviert; signierter Ausgangsbuild und realer Zertifikatsnachweis weiterhin erforderlich.
+- Datenbankschema bleibt 3.
+
 ## 0.1.11 / Build 0001 – 14.10.2026
 **Status: Anwender bestätigt Bedienprüfung PASS (14.10.2026); fachliche Freigabe der Kataloginhalte und signierter In-App-Updatetest weiterhin offen.**
 

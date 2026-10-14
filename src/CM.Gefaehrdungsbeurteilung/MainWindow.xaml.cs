@@ -529,6 +529,11 @@ public partial class MainWindow : Window
             if (newer && !InstallUpdateButton.IsEnabled)
                 UpdateStatus.Text += " Automatische Installation erst nach Einrichtung signierter Releases verfügbar.";
         }
+        catch (InvalidOperationException ex) when (ex.Message.StartsWith("Kein öffentliches GitHub-Release", StringComparison.Ordinal))
+        {
+            UpdateStatus.Text = "Noch kein veröffentlichtes GitHub Release. Für manuelle Testversionen unten auf GitHub-Testversionen (Artifacts) klicken.";
+            UpdateNotes.Text = "";
+        }
         catch (Exception ex) { UpdateStatus.Text = "Updateprüfung fehlgeschlagen: " + ex.Message; }
         finally { CheckUpdateButton.IsEnabled = true; }
     }

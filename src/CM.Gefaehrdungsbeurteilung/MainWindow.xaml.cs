@@ -387,6 +387,28 @@ public partial class MainWindow : Window
         AfterPBox.SelectedIndex = 0; AfterSBox.SelectedIndex = 1;
     }
 
+    private void InsertStopTemplate_Click(object sender, RoutedEventArgs e)
+    {
+        if (_current is null || _selectedHazard is null) return;
+        const string heading = "STOP-Prüfung (objektspezifisch ergänzen):";
+        if (HazardMeasuresBox.Text.Contains(heading, StringComparison.Ordinal))
+        {
+            Hint("Die STOP-Struktur ist bereits vorhanden. Bitte die einzelnen Maßnahmen bearbeiten.");
+            return;
+        }
+        const string template = "STOP-Prüfung (objektspezifisch ergänzen):\\n" +
+            "S – Substitution: prüfen / begründen: ...\\n" +
+            "T – Technisch: ...\\n" +
+            "O – Organisatorisch: ...\\n" +
+            "P – Persönliche Schutzausrüstung: ...";
+        var existing = HazardMeasuresBox.Text.Trim();
+        HazardMeasuresBox.Text = string.IsNullOrWhiteSpace(existing)
+            ? template.Replace("\\\\n", Environment.NewLine)
+            : existing + Environment.NewLine + Environment.NewLine + template.Replace("\\\\n", Environment.NewLine);
+        MarkDraft();
+        EditorSavedInfo.Text = "STOP-Struktur ergänzt – fachlich ausfüllen und speichern.";
+    }
+
     private void ApplyHazard_Click(object sender, RoutedEventArgs e)
     {
         SaveSelectedHazardFields();

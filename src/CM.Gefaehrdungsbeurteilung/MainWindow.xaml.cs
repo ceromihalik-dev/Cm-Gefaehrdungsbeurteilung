@@ -26,7 +26,8 @@ public partial class MainWindow : Window
         var installedVersion = UpdateService.CurrentVersion;
         var displayVersion = $"{installedVersion.Major}.{installedVersion.Minor}.{installedVersion.Build}";
         SidebarVersionText.Text = $"Version {displayVersion}  •  Entwicklungsstand";
-        InstalledVersionText.Text = $"Installiert: {displayVersion} / Build {installedVersion.Revision:D4}";
+        var fileVersion = FileVersionInfo.GetVersionInfo(typeof(MainWindow).Assembly.Location);
+        InstalledVersionText.Text = $"Installiert: {displayVersion} / Build {fileVersion.FilePrivatePart:D4}";
         try { _storage = new StorageService(); }
         catch (Exception ex)
         {

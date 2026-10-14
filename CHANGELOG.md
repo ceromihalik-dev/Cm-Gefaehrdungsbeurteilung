@@ -8,6 +8,8 @@
 - Buildskript ermittelt die Version künftig aus der Projektdatei; feste Versionsprüfung pro Release entfällt.
 - Bestehende SHA-256-Prüfung, Authenticode-Herausgeberprüfung und Trennung zwischen Test-Artifact und signiertem Release bleiben bestehen.
 - Datenbankschema unverändert 3.
+- Nachtrag: Beschädigtes und doppelt eingefügtes Buildskript repariert; PowerShell-Syntaxprüfung in GitHub Actions ergänzt.
+- Nachtrag: Statischen Quellcodetest von fest eingetragener Version 0.1.3 befreit und in CI eingebunden (XAML, Ereignishandler, Katalogreferenzen, SQLite-Migrationen).
 
 ## 0.1.8 / Build 0001 – 14.10.2026
 **Status: Quellcode aktualisiert; Windows-Build und Installation noch nicht getestet.**

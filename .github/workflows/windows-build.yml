@@ -44,7 +44,7 @@ jobs:
       - name: Verify PowerShell build scripts parse
         shell: pwsh
         run: |
-          $scripts = @('scripts/Build-Setup.ps1', 'scripts/Test-VersionConsistency.ps1', 'scripts/Prepare-SignedRelease.ps1')
+          $scripts = @('scripts/Build-Setup.ps1', 'scripts/Test-VersionConsistency.ps1', 'scripts/Prepare-SignedRelease.ps1', 'scripts/Publish-SignedRelease.ps1')
           foreach ($path in $scripts) {
             $tokens = $null
             $errors = $null

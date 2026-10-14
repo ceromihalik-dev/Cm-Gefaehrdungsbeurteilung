@@ -1,0 +1,31 @@
+# .NET / Visual Studio
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+# Generated output
+publish/
+release/
+artifacts/
+TestResults/
+# Local databases and backups
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.bak
+backups/
+# Sensitive credentials / signing
+*.pfx
+*.p12
+*.key
+*.pem
+.env
+.env.*
+secrets.json
+appsettings.Local.json
+# Archives
+*.zip
+*.7z

@@ -1,5 +1,14 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.11 / Build 0001 – 14.10.2026
+**Status: GitHub-Quellcode vorbereitet; Windows-Build und Anwenderprüfung stehen aus.**
+
+- Gefährdungseditor: optionale STOP-Struktur für S (Substitution), T (technisch), O (organisatorisch) und P (persönliche Schutzmaßnahmen).
+- Bereits erfasste Maßnahmen bleiben bestehen; STOP-Vorlage wird nur auf ausdrückliche Benutzeraktion angehängt und nicht doppelt eingefügt.
+- Solange STOP-Vorlagen Platzhalter enthalten, ist die Dokumentation einer fachlichen Abschlussprüfung gesperrt.
+- Vorhandenes SQLite-Schema 3 und bisherige Beurteilungen bleiben unverändert.
+- Fachliche Eignung der Maßnahmen weiterhin von einer verantwortlichen fachkundigen Person zu prüfen.
+
 ## 0.1.10 / Build 0001 – 14.10.2026
 **Status: Quellcode auf GitHub; GitHub-Windows-Build und Installation noch nicht bestätigt.**
 

@@ -35,7 +35,17 @@ public partial class MainWindow : Window
         LoadSettings();
         LoadDashboard();
         UpdateCatalog();
+        EnsureDefaultUpdateSource();
         Loaded += MainWindow_Loaded;
+    }
+
+    private void EnsureDefaultUpdateSource()
+    {
+        // Vorhandene individuelle Einstellungen nicht überschreiben.
+        if (string.IsNullOrWhiteSpace(_storage.GetSetting("repo.owner")))
+            _storage.SetSetting("repo.owner", "ceromihalik-dev");
+        if (string.IsNullOrWhiteSpace(_storage.GetSetting("repo.name")))
+            _storage.SetSetting("repo.name", "Cm-Gefaehrdungsbeurteilung");
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)

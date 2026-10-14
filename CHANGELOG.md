@@ -1,7 +1,7 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
 ## 0.1.11 / Build 0001 – 14.10.2026
-**Status: GitHub-Quellcode vorbereitet; Windows-Build und Anwenderprüfung stehen aus.**
+**Status: Anwender bestätigt Bedienprüfung PASS (14.10.2026); fachliche Freigabe der Kataloginhalte und signierter In-App-Updatetest weiterhin offen.**
 
 - Gefährdungseditor: optionale STOP-Struktur für S (Substitution), T (technisch), O (organisatorisch) und P (persönliche Schutzmaßnahmen).
 - Bereits erfasste Maßnahmen bleiben bestehen; STOP-Vorlage wird nur auf ausdrückliche Benutzeraktion angehängt und nicht doppelt eingefügt.

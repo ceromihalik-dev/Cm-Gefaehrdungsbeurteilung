@@ -15,7 +15,6 @@ public partial class MainWindow : Window
     private StorageService _storage = null!;
     private Assessment? _current;
     private AssessmentHazard? _selectedHazard;
-    private ReleaseInfo? _latestRelease;
     private bool _loading;
     private bool _installingUpdate;
     private List<ActivityChoice> _activityChoices = new();
@@ -37,47 +36,9 @@ public partial class MainWindow : Window
             return;
         }
         CatalogGrid.ItemsSource = CatalogService.Entries;
-        EnsureDefaultUpdateSource();
         LoadSettings();
         LoadDashboard();
         UpdateCatalog();
-        Loaded += MainWindow_Loaded;
-    }
-
-    private void EnsureDefaultUpdateSource()
-    {
-        // Vorhandene individuelle Einstellungen nicht überschreiben.
-        if (string.IsNullOrWhiteSpace(_storage.GetSetting("repo.owner")))
-            _storage.SetSetting("repo.owner", "ceromihalik-dev");
-        if (string.IsNullOrWhiteSpace(_storage.GetSetting("repo.name")))
-            _storage.SetSetting("repo.name", "Cm-Gefaehrdungsbeurteilung");
-    }
-
-    private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (_storage.GetSetting("updates.autocheck") == "0") return;
-        var owner = _storage.GetSetting("repo.owner");
-        var repo = _storage.GetSetting("repo.name");
-        if (string.IsNullOrWhiteSpace(owner) || string.IsNullOrWhiteSpace(repo)) return;
-        if (DateTime.TryParse(_storage.GetSetting("updates.lastCheckUtc"), out var last) &&
-            DateTime.UtcNow - last.ToUniversalTime() < TimeSpan.FromDays(1)) return;
-        try
-        {
-            _latestRelease = await UpdateService.GetLatestAsync(owner, repo);
-            _storage.SetSetting("updates.lastCheckUtc", DateTime.UtcNow.ToString("O"));
-            if (_latestRelease.Version > UpdateService.CurrentVersion &&
-                MessageBox.Show($"Eine neue Version {_latestRelease.Version} ist verfügbar. Updateinformationen anzeigen?",
-                    "Neues Update", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-            {
-                Updates_Click(sender, e);
-                UpdateStatus.Text = $"Neue Version {_latestRelease.Version} verfügbar.";
-                UpdateNotes.Text = _latestRelease.Notes;
-                OpenReleaseButton.IsEnabled = true;
-                InstallUpdateButton.IsEnabled = _latestRelease.HasInstaller &&
-                    UpdateService.CanAutoInstall;
-            }
-        }
-        catch (Exception ex) { UpdateStatus.Text = "Automatische Updateprüfung fehlgeschlagen: " + ex.Message; }
     }
 
     private void ShowView(FrameworkElement panel, string title)
@@ -106,8 +67,7 @@ public partial class MainWindow : Window
     private void Settings_Click(object sender, RoutedEventArgs e) { LoadSettings(); ShowView(SettingsView, "Einstellungen"); }
     private void Updates_Click(object sender, RoutedEventArgs e)
     {
-        UpdateSourceText.Text = "Updatequelle: " + (string.IsNullOrWhiteSpace(_storage.GetSetting("repo.owner"))
-            ? "noch nicht eingerichtet" : $"github.com/{_storage.GetSetting("repo.owner")}/{_storage.GetSetting("repo.name")}");
+        UpdateSourceText.Text = "Updatequelle: lokale Datei (.cmupdate) – kein Internet erforderlich";
         ShowView(UpdatesView, "Updates");
     }
 
@@ -484,12 +444,6 @@ public partial class MainWindow : Window
         CompanyBox.Text = _storage.GetSetting("company.name");
         CompanyAddressBox.Text = _storage.GetSetting("company.address");
         LogoPathBox.Text = _storage.GetSetting("company.logo");
-        RepoOwnerBox.Text = _storage.GetSetting("repo.owner");
-        RepoNameBox.Text = _storage.GetSetting("repo.name");
-        TrustedPublisherText.Text = UpdateService.CanAutoInstall
-            ? "Verifizierter Herausgeber-Fingerabdruck: " + UpdateService.TrustedSignerThumbprint
-            : "Nicht hinterlegt (Entwicklungsbuild): automatische Installation deaktiviert.";
-        AutoCheckUpdatesCheckBox.IsChecked = _storage.GetSetting("updates.autocheck") != "0";
         DatabasePathText.Text = "Datenbank: " + _storage.DatabasePath;
     }
 
@@ -528,9 +482,6 @@ public partial class MainWindow : Window
             _storage.SetSetting("company.name", CompanyBox.Text.Trim());
             _storage.SetSetting("company.address", CompanyAddressBox.Text.Trim());
             _storage.SetSetting("company.logo", LogoPathBox.Text.Trim());
-            _storage.SetSetting("repo.owner", RepoOwnerBox.Text.Trim());
-            _storage.SetSetting("repo.name", RepoNameBox.Text.Trim());
-            _storage.SetSetting("updates.autocheck", AutoCheckUpdatesCheckBox.IsChecked == true ? "1" : "0");
             Hint("Einstellungen lokal gespeichert.");
         }
         catch (Exception ex) { ShowError(ex); }
@@ -542,75 +493,47 @@ public partial class MainWindow : Window
         catch (Exception ex) { ShowError(ex); }
     }
 
-    private async void CheckUpdate_Click(object sender, RoutedEventArgs e)
+    private async void ImportUpdateFile_Click(object sender, RoutedEventArgs e)
     {
-        CheckUpdateButton.IsEnabled = false;
-        InstallUpdateButton.IsEnabled = false;
-        OpenReleaseButton.IsEnabled = false;
-        _latestRelease = null;
-        UpdateNotes.Text = "";
-        UpdateStatus.Text = "Suche nach einem Release ...";
+        var dialog = new OpenFileDialog
+        {
+            Title = "CM Update-Datei auswählen",
+            Filter = "CM Update-Datei (*.cmupdate)|*.cmupdate",
+            CheckFileExists = true
+        };
+        if (dialog.ShowDialog() != true) return;
+        UpdateStatus.Text = "Update-Datei wird geprüft ...";
         try
         {
-            _latestRelease = await UpdateService.GetLatestAsync(_storage.GetSetting("repo.owner"), _storage.GetSetting("repo.name"));
-            _storage.SetSetting("updates.lastCheckUtc", DateTime.UtcNow.ToString("O"));
-            OpenReleaseButton.IsEnabled = true;
-            bool newer = _latestRelease.Version > UpdateService.CurrentVersion;
-            UpdateStatus.Text = newer ? $"Neue Version {_latestRelease.Version} verfügbar." : $"Kein neueres Release. Letzte Veröffentlichung: {_latestRelease.Version}.";
-            UpdateNotes.Text = _latestRelease.Notes;
-            InstallUpdateButton.IsEnabled = newer && _latestRelease.HasInstaller &&
-                UpdateService.CanAutoInstall;
-            if (newer && !InstallUpdateButton.IsEnabled)
-                UpdateStatus.Text += " Automatische Installation erst nach Einrichtung signierter Releases verfügbar.";
-        }
-        catch (InvalidOperationException ex) when (ex.Message.StartsWith("Kein öffentliches GitHub-Release", StringComparison.Ordinal))
-        {
-            UpdateStatus.Text = "Noch kein veröffentlichtes GitHub Release. Für manuelle Testversionen unten auf GitHub-Testversionen (Artifacts) klicken.";
-            UpdateNotes.Text = "";
-        }
-        catch (Exception ex) { UpdateStatus.Text = "Updateprüfung fehlgeschlagen: " + ex.Message; }
-        finally { CheckUpdateButton.IsEnabled = true; }
-    }
-
-    private void OpenTestBuilds_Click(object sender, RoutedEventArgs e)
-    {
-        // Fester, vom Projekt definierter Link; niemals eine ungeprüfte URL aus dem Release übernehmen.
-        const string url = "https://github.com/ceromihalik-dev/Cm-Gefaehrdungsbeurteilung/actions/workflows/windows-build.yml";
-        try
-        {
-            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-        }
-        catch (Exception ex)
-        {
-            UpdateStatus.Text = "GitHub konnte nicht geöffnet werden: " + ex.Message;
-        }
-    }
-
-    private void OpenRelease_Click(object sender, RoutedEventArgs e)
-    {
-        if (_latestRelease is null) return;
-        if (Uri.TryCreate(_latestRelease.HtmlUrl, UriKind.Absolute, out var uri) && uri.Scheme == "https" && uri.Host == "github.com")
-            Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true });
-    }
-
-    private async void InstallUpdate_Click(object sender, RoutedEventArgs e)
-    {
-        if (_latestRelease is null || _latestRelease.Version <= UpdateService.CurrentVersion) return;
-        if (MessageBox.Show("Das Update wird heruntergeladen und geprüft. Danach wird das Installationsprogramm gestartet und diese Anwendung beendet. Vorhandene Daten bleiben erhalten. Fortfahren?",
-            "Update installieren", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-        InstallUpdateButton.IsEnabled = false;
-        UpdateStatus.Text = "Lade Update und überprüfe SHA-256 sowie Herausgebersignatur ...";
-        try
-        {
-            if (_current != null) SaveCurrent();
-            _storage.Backup("vor-update");
-            string installer = await UpdateService.DownloadVerifiedInstallerAsync(_latestRelease, UpdateService.TrustedSignerThumbprint);
-            if (Process.Start(new ProcessStartInfo(installer) { UseShellExecute = true, Arguments = "/CLOSEAPPLICATIONS /NORESTART" }) is null)
-                throw new InvalidOperationException("Installationsprogramm konnte nicht gestartet werden.");
+            var package = await LocalUpdateService.InspectAsync(dialog.FileName);
+            UpdateNotes.Text = package.Notes;
+            UpdateStatus.Text = $"Datei geprüft: Version {package.Version}. SHA-256 des Pakets: {package.PackageSha256}";
+            var result = MessageBox.Show(
+                $"Update auf Version {package.Version} installieren?\\n\\n" +
+                "Die SHA-256-Prüfung kontrolliert die Unversehrtheit der Setup-Datei, " +
+                "bestätigt aber NICHT den Herausgeber. Bitte nur Dateien aus eigener " +
+                "vertrauenswürdiger Quelle verwenden.\\n\\n" +
+                "Das Programm sichert zuerst die Datenbank und startet dann das Setup. Fortfahren?",
+                "Lokales Update bestätigen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result != MessageBoxResult.Yes)
+            {
+                UpdateStatus.Text = "Update wurde nicht installiert.";
+                return;
+            }
+            if (_current is not null) SaveCurrent();
+            var backup = _storage.Backup("vor-datei-update");
+            UpdateStatus.Text = "Datenbank gesichert: " + backup + " – Setup wird vorbereitet ...";
+            var installer = await LocalUpdateService.ExtractVerifiedAsync(package);
+            if (Process.Start(new ProcessStartInfo(installer)
+                { UseShellExecute = true, Arguments = "/CLOSEAPPLICATIONS /NORESTART" }) is null)
+                throw new InvalidOperationException("Das Installationsprogramm konnte nicht gestartet werden.");
             _installingUpdate = true;
             Application.Current.Shutdown();
         }
-        catch (Exception ex) { UpdateStatus.Text = "Update abgebrochen: " + ex.Message; InstallUpdateButton.IsEnabled = true; }
+        catch (Exception ex)
+        {
+            UpdateStatus.Text = "Datei-Update abgebrochen: " + ex.Message;
+        }
     }
 
     protected override void OnClosing(CancelEventArgs e)

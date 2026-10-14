@@ -1,5 +1,14 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.7 / Build 0001 – 14.10.2026
+**Status: GitHub-Quellcode aktualisiert; Windows-Build noch nicht bestätigt.**
+
+- Im Updatebereich direkter Zugang zu GitHub Actions / Windows-Testversionen ergänzt.
+- Klare Trennung zwischen unsignierten CI-Artifacts (manuell) und signierten GitHub Releases (für automatische Installation).
+- Bei fehlendem öffentlichen Release wird eine verständliche Anleitung statt einer generischen Fehlermeldung angezeigt.
+- Bereits vorhandene Verifikation von SHA-256 und Herausgebersignatur bleibt erhalten; Sicherheitsprüfung wurde nicht abgeschwächt.
+- Datenbankschema unverändert 3; Nutzerdaten werden beim Setup getrennt vorgehalten.
+
 ## 0.1.6 / Build 0001 – 14.10.2026
 **Status: Release-Vorbereitung, ohne signierte Freigabe und ohne bestätigten Windows-Test.**
 

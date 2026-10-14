@@ -71,17 +71,34 @@ public static class UpdateService
         if (!release.HasInstaller) throw new InvalidOperationException("Setup oder Prüfsummendatei fehlt im Release.");
         if (!CanAutoInstall || !string.Equals(pinnedThumbprint, TrustedSignerThumbprint, StringComparison.OrdinalIgnoreCase))
             throw new InvalidOperationException("In diesem Programm-Build ist kein freigegebener Update-Herausgeber fest hinterlegt. Automatische Installation deaktiviert.");
+        if (release.Version <= CurrentVersion)
+            throw new InvalidOperationException("Das Release ist nicht neuer als die installierte Programmversion.");
         var installerUri = GitHubReleaseAssetUrl(release.InstallerUrl);
         var sumsUri = GitHubReleaseAssetUrl(release.ChecksumsUrl);
         string installerName = Uri.UnescapeDataString(installerUri.Segments.Last());
-        if (installerName.Contains('/') || installerName.Contains('\\') || !installerName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Unzulässiger Dateiname.");
+        string expectedName = $"CM-Gefaehrdungsbeurteilung-Setup-{release.Version.Major}.{release.Version.Minor}.{release.Version.Build}.exe";
+        if (!installerName.Equals(expectedName, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Installername stimmt nicht mit der Releaseversion überein.");
+        if (Uri.UnescapeDataString(sumsUri.Segments.Last()) != "SHA256SUMS.txt")
+            throw new InvalidOperationException("Unzulässiger Name der Prüfsummendatei.");
+        // Die beiden Dateien muessen zum selben GitHub-Release gehoeren.
+        if (!installerUri.AbsolutePath.Contains("/releases/download/", StringComparison.OrdinalIgnoreCase) ||
+            !sumsUri.AbsolutePath.Contains("/releases/download/", StringComparison.OrdinalIgnoreCase) ||
+            !installerUri.AbsolutePath[..installerUri.AbsolutePath.LastIndexOf('/')].Equals(
+                sumsUri.AbsolutePath[..sumsUri.AbsolutePath.LastIndexOf('/')], StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Setup und Prüfsumme stammen nicht aus demselben GitHub-Release.");
         string sumFile = await Http.GetStringAsync(sumsUri);
+        if (sumFile.Length > 128 * 1024)
+            throw new InvalidOperationException("Prüfsummendatei ist unerwartet groß.");
         string? checksum = null;
         foreach (var line in sumFile.Split('\n', StringSplitOptions.RemoveEmptyEntries))
         {
             var m = Regex.Match(line.Trim(), @"^([a-fA-F0-9]{64})\s+\*?(.+)$");
-            if (m.Success && m.Groups[2].Value.Trim() == installerName) checksum = m.Groups[1].Value;
+            if (m.Success && m.Groups[2].Value.Trim() == installerName)
+            {
+                if (checksum is not null) throw new InvalidOperationException("Mehrdeutige SHA-256-Prüfsumme.");
+                checksum = m.Groups[1].Value;
+            }
         }
         if (checksum is null) throw new InvalidOperationException("Passende SHA-256-Prüfsumme fehlt.");
         var dir = Path.Combine(StorageService.DataDirectory, "UpdateCache");

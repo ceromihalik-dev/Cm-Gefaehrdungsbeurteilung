@@ -102,6 +102,10 @@ assert 'CanAutoInstall' in update and 'Get-AuthenticodeSignature' in update
 assert 'repo.signerThumbprint' not in window and 'CertThumbprintBox' not in window
 assert 'UpdateService.TrustedSignerThumbprint' in window
 assert '500L * 1024 * 1024' in update
+assert 'Installername stimmt nicht mit der Releaseversion' in update
+assert 'Setup und Prüfsumme stammen nicht aus demselben GitHub-Release' in update
+assert 'Mehrdeutige SHA-256-Prüfsumme' in update
+assert 'release.Version <= CurrentVersion' in update
 assert (root / 'scripts' / 'Test-VersionConsistency.ps1').exists()
 assert (root / 'scripts' / 'Prepare-SignedRelease.ps1').exists()
 print('PASS: Versionsvertrag, Installer-AppId, Sicherung der Update-Vertrauenskette und CI-Testskripte')

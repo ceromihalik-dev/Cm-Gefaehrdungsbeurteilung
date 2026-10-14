@@ -1,5 +1,14 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.8 / Build 0001 – 14.10.2026
+**Status: Quellcode aktualisiert; Windows-Build und Installation noch nicht getestet.**
+
+- Automatische Updateprüfung speichert den letzten Prüfzeitpunkt erst nach erfolgreicher Antwort der GitHub-Releases-API.
+- Manuelle Updateprüfung setzt zuvor gespeicherte Release-Informationen, Freigabeschaltflächen und Anmerkungen zurück; alte Ergebnisse bleiben nicht sichtbar.
+- Erfolgreiche manuelle Prüfungen aktualisieren ebenfalls den Zeitpunkt der letzten Prüfung.
+- Signatur- und SHA-256-Anforderungen für automatische Installationen bleiben unverändert.
+- Datenbankschema unverändert 3.
+
 ## 0.1.7 / Build 0001 – 14.10.2026
 **Status: GitHub-Quellcode aktualisiert; Windows-Build noch nicht bestätigt.**
 

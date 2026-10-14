@@ -1,5 +1,12 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.4 / Build 0001 – 14.10.2026
+**Status: Entwicklungsstand; GitHub-CI und Upgradeprüfung noch ausstehend.**
+
+- Versionsnummer für Windows-Anwendung, Setup und Buildskript auf 0.1.4 angehoben.
+- Datenbankschema 3 bleibt unverändert; Update-Test von 0.1.3 mit Datenerhalt vorgesehen.
+- Automatische Installation weiterhin ausschließlich für korrekt signierte und SHA-256-geprüfte Releases. GitHub-CI-Artefakte sind unsignierte Testpakete.
+
 ## 0.1.3 / Build 0001 – 14.10.2026
 **Status: Quellcode erstellt, lokale statische und SQLite-Tests bestanden. Windows-Installer noch NICHT ausgeführt / freigegeben.**
 

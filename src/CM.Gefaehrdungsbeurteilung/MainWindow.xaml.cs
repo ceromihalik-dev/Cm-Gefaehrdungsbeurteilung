@@ -509,10 +509,10 @@ public partial class MainWindow : Window
             UpdateNotes.Text = package.Notes;
             UpdateStatus.Text = $"Datei geprüft: Version {package.Version}. SHA-256 des Pakets: {package.PackageSha256}";
             var result = MessageBox.Show(
-                $"Update auf Version {package.Version} installieren?\\n\\n" +
+                $"Update auf Version {package.Version} installieren?\n\n" +
                 "Die SHA-256-Prüfung kontrolliert die Unversehrtheit der Setup-Datei, " +
                 "bestätigt aber NICHT den Herausgeber. Bitte nur Dateien aus eigener " +
-                "vertrauenswürdiger Quelle verwenden.\\n\\n" +
+                "vertrauenswürdiger Quelle verwenden.\n\n" +
                 "Das Programm sichert zuerst die Datenbank und startet dann das Setup. Fortfahren?",
                 "Lokales Update bestätigen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result != MessageBoxResult.Yes)

@@ -111,6 +111,8 @@ assert '500L * 1024 * 1024' in update
 assert 'Installername stimmt nicht mit der Releaseversion' in update
 assert 'Setup und Prüfsumme stammen nicht aus demselben GitHub-Release' in update
 assert 'Mehrdeutige SHA-256-Prüfsumme' in update
+assert 'Release-Assets passen nicht zum freigegebenen Versionstag' in update
+assert (root / 'scripts' / 'Publish-SignedRelease.ps1').exists()
 assert 'release.Version <= CurrentVersion' in update
 assert (root / 'scripts' / 'Test-VersionConsistency.ps1').exists()
 assert (root / 'scripts' / 'Prepare-SignedRelease.ps1').exists()

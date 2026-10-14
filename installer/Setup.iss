@@ -1,5 +1,5 @@
 #define MyAppName "CM Gefährdungsbeurteilung"
-#define MyAppVersion "0.1.11"
+#define MyAppVersion "0.1.12"
 #define MyAppExeName "CM.Gefaehrdungsbeurteilung.exe"
 
 [Setup]
@@ -25,7 +25,7 @@ CloseApplications=yes
 RestartApplications=no
 DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
-VersionInfoVersion=0.1.11.1
+VersionInfoVersion=0.1.12.1
 MinVersion=10.0.17763
 DisableWelcomePage=no
 ; Inno Setup legt ausschließlich Programmdateien unter {app} ab.

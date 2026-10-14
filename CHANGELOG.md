@@ -1,5 +1,14 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.9 / Build 0001 – 14.10.2026
+**Status: GitHub-Quellcode und CI-Prüfungen vorbereitet; Windows-Build und Installation noch nicht bestätigt.**
+
+- Einheitliche Versionsprüfung für Anwendung, Assembly, Dateiversion und Inno Setup vor dem Build eingeführt.
+- GitHub Actions führt die Versionsprüfung vor dem Setup-Build aus und bricht bei Abweichungen ab.
+- Buildskript ermittelt die Version künftig aus der Projektdatei; feste Versionsprüfung pro Release entfällt.
+- Bestehende SHA-256-Prüfung, Authenticode-Herausgeberprüfung und Trennung zwischen Test-Artifact und signiertem Release bleiben bestehen.
+- Datenbankschema unverändert 3.
+
 ## 0.1.8 / Build 0001 – 14.10.2026
 **Status: Quellcode aktualisiert; Windows-Build und Installation noch nicht getestet.**
 

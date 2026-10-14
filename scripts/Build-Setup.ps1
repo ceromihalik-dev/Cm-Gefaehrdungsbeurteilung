@@ -36,7 +36,34 @@ if (-not $ISCC -or -not (Test-Path $ISCC)) {
 
 $xml = [xml](Get-Content -LiteralPath $project -Raw)
 $version = $xml.Project.PropertyGroup.Version
-if ($version -ne '0.1.8') { throw "Projektversion unerwartet: $version" }
+if ($version -notmatch '^\d+\.\d+\.\d+
+$exeName = "CM-Gefaehrdungsbeurteilung-Setup-$version.exe"
+$expectedInstaller = Join-Path $root "release\$exeName"
+if (Test-Path $expectedInstaller) { Remove-Item $expectedInstaller -Force }
+
+$publishArgs = @('publish', $project, '-c', 'Release', '-r', 'win-x64', '--self-contained', 'true',
+  '-p:PublishSingleFile=false', '-o', $publish)
+if ($TrustedSignerThumbprint) {
+    # Identitaet wird in Assembly-Metadaten kompiliert, niemals aus lokalen Programmeinstellungen gelesen.
+    $publishArgs += "-p:TrustedUpdateSignerThumbprint=$($TrustedSignerThumbprint.ToUpperInvariant())"
+}
+Write-Host 'Baue Windows-Anwendung (.NET 10 / self-contained) ...'
+& dotnet @publishArgs
+if ($LASTEXITCODE -ne 0) { throw 'dotnet publish fehlgeschlagen.' }
+if (-not (Test-Path (Join-Path $publish 'CM.Gefaehrdungsbeurteilung.exe'))) {
+    throw 'Nach dem Publish fehlt die Windows-Programmdatei.'
+}
+Write-Host 'Baue Setup ueber Inno Setup ...'
+& $ISCC (Join-Path $root 'installer\Setup.iss')
+if ($LASTEXITCODE -ne 0 -or -not (Test-Path $expectedInstaller)) {
+    throw 'Inno Setup hat kein erwartetes Setup erzeugt.'
+}
+Write-Host "ERFOLG: $expectedInstaller"
+Write-Warning 'Dies ist ein NICHT SIGNIERTES TEST-SETUP. Keine automatische Updatefreigabe!'
+Write-Host 'Naechster Schritt: tests/Test-Installer.ps1 auf isoliertem Windows-Testsystem und Signaturprozess in docs/RELEASE_PROZESS.md.'
+) { throw "Ungueltige Projektversion: $version" }
+& (Join-Path $PSScriptRoot 'Test-VersionConsistency.ps1')
+if ($LASTEXITCODE -ne 0) { throw 'VersionConsistency-Test fehlgeschlagen.' }
 $exeName = "CM-Gefaehrdungsbeurteilung-Setup-$version.exe"
 $expectedInstaller = Join-Path $root "release\$exeName"
 if (Test-Path $expectedInstaller) { Remove-Item $expectedInstaller -Force }

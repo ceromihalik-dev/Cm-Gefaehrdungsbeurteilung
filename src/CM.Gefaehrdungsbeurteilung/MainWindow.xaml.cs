@@ -23,6 +23,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        var installedVersion = UpdateService.CurrentVersion;
+        var displayVersion = $"{installedVersion.Major}.{installedVersion.Minor}.{installedVersion.Build}";
+        SidebarVersionText.Text = $"Version {displayVersion}  •  Entwicklungsstand";
+        InstalledVersionText.Text = $"Installiert: {displayVersion} / Build {installedVersion.Revision:D4}";
         try { _storage = new StorageService(); }
         catch (Exception ex)
         {
@@ -32,10 +36,10 @@ public partial class MainWindow : Window
             return;
         }
         CatalogGrid.ItemsSource = CatalogService.Entries;
+        EnsureDefaultUpdateSource();
         LoadSettings();
         LoadDashboard();
         UpdateCatalog();
-        EnsureDefaultUpdateSource();
         Loaded += MainWindow_Loaded;
     }
 

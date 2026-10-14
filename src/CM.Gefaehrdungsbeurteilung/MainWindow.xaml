@@ -200,6 +200,8 @@
           <TextBlock x:Name="InstalledVersionText" Text="Installierte Version wird geladen" FontSize="16" Margin="0,0,0,7"/>
           <TextBlock x:Name="UpdateSourceText" Text="Updatequelle: nicht eingerichtet" Foreground="#62748A" Margin="0,0,0,15"/>
           <StackPanel Orientation="Horizontal" Margin="0,0,0,16"><Button x:Name="CheckUpdateButton" Content="Auf Updates prüfen" Click="CheckUpdate_Click"/><Button x:Name="OpenReleaseButton" Content="Releaseseite öffnen" IsEnabled="False" Click="OpenRelease_Click"/><Button x:Name="InstallUpdateButton" Content="Verifiziertes Update installieren" IsEnabled="False" Click="InstallUpdate_Click"/></StackPanel>
+          <Button Content="GitHub-Testversionen (Artifacts) öffnen" HorizontalAlignment="Left" Click="OpenTestBuilds_Click" Margin="0,0,0,10"/>
+          <TextBlock Text="Testversionen aus GitHub Actions müssen manuell heruntergeladen und installiert werden. Die automatische Updateprüfung berücksichtigt ausschließlich veröffentlichte GitHub Releases." TextWrapping="Wrap" Foreground="#62748A" Margin="0,0,0,12"/>
           <TextBlock x:Name="UpdateStatus" Text="Es wurde noch nicht nach einer neuen Version gesucht." Margin="0,0,0,15"/>
           <TextBox x:Name="UpdateNotes" IsReadOnly="True" Height="215" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
           <TextBlock Text="Automatische Installation nur mit überprüfter SHA-256-Prüfsumme und gültiger Authenticode-Signatur des beim Erstellen der Software fest hinterlegten Herausgebers. Ansonsten nur manuelle Aktualisierung." Foreground="#62748A"/>

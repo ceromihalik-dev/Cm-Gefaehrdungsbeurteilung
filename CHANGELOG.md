@@ -1,5 +1,17 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.10 / Build 0001 – 14.10.2026
+**Status: Quellcode auf GitHub; GitHub-Windows-Build und Installation noch nicht bestätigt.**
+
+- Updateinstallation verwirft Releases, die nicht neuer als die installierte Version sind.
+- Installerdateiname muss exakt der GitHub-Releaseversion entsprechen.
+- Prüfsummendatei muss SHA256SUMS.txt heißen und aus demselben Release wie die Setup.exe stammen.
+- Doppelte Einträge für denselben Installernamen in SHA256SUMS.txt werden zurückgewiesen.
+- Größenbegrenzung der Prüfsummenliste auf 128 KiB eingeführt.
+- Statische Buildtests auf zusätzliche Sicherheitsbedingungen erweitert.
+- Bestehende Signaturprüfung gegen fest hinterlegten Herausgeber bleibt verpflichtend; unsignierte CI-Artefakte bleiben nur manuell installierbar.
+- Datenbankschema unverändert 3, bestehende Beurteilungen werden nicht geändert.
+
 ## 0.1.9 / Build 0001 – 14.10.2026
 **Status: GitHub-Quellcode und CI-Prüfungen vorbereitet; Windows-Build und Installation noch nicht bestätigt.**
 

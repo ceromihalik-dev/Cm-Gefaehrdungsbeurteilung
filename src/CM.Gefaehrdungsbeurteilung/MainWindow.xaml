@@ -8,7 +8,7 @@
     <Border Background="#153A4B" Grid.Column="0">
       <DockPanel Margin="18,22">
         <StackPanel DockPanel.Dock="Bottom">
-          <TextBlock Text="Version 0.1.4  •  Entwicklungsstand" FontSize="11" Foreground="#B8CED8" TextWrapping="Wrap"/>
+          <TextBlock x:Name="SidebarVersionText" Text="Version wird geladen" FontSize="11" Foreground="#B8CED8" TextWrapping="Wrap"/>
           <TextBlock Text="Lokal / Offline" Foreground="#B8CED8" Margin="0,8,0,0" FontSize="12"/>
         </StackPanel>
         <StackPanel>
@@ -197,7 +197,7 @@
       <ScrollViewer x:Name="UpdatesView" Grid.Row="1" Visibility="Collapsed"><StackPanel>
         <Border Style="{StaticResource Panel}"><StackPanel>
           <TextBlock Text="Programmaktualisierung" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,16"/>
-          <TextBlock Text="Installiert: 0.1.4 / Build 0001" FontSize="16" Margin="0,0,0,7"/>
+          <TextBlock x:Name="InstalledVersionText" Text="Installierte Version wird geladen" FontSize="16" Margin="0,0,0,7"/>
           <TextBlock x:Name="UpdateSourceText" Text="Updatequelle: nicht eingerichtet" Foreground="#62748A" Margin="0,0,0,15"/>
           <StackPanel Orientation="Horizontal" Margin="0,0,0,16"><Button x:Name="CheckUpdateButton" Content="Auf Updates prüfen" Click="CheckUpdate_Click"/><Button x:Name="OpenReleaseButton" Content="Releaseseite öffnen" IsEnabled="False" Click="OpenRelease_Click"/><Button x:Name="InstallUpdateButton" Content="Verifiziertes Update installieren" IsEnabled="False" Click="InstallUpdate_Click"/></StackPanel>
           <TextBlock x:Name="UpdateStatus" Text="Es wurde noch nicht nach einer neuen Version gesucht." Margin="0,0,0,15"/>

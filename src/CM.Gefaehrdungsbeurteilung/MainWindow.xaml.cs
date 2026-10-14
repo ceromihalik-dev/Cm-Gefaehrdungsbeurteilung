@@ -533,6 +533,20 @@ public partial class MainWindow : Window
         finally { CheckUpdateButton.IsEnabled = true; }
     }
 
+    private void OpenTestBuilds_Click(object sender, RoutedEventArgs e)
+    {
+        // Fester, vom Projekt definierter Link; niemals eine ungeprüfte URL aus dem Release übernehmen.
+        const string url = "https://github.com/ceromihalik-dev/Cm-Gefaehrdungsbeurteilung/actions/workflows/windows-build.yml";
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            UpdateStatus.Text = "GitHub konnte nicht geöffnet werden: " + ex.Message;
+        }
+    }
+
     private void OpenRelease_Click(object sender, RoutedEventArgs e)
     {
         if (_latestRelease is null) return;

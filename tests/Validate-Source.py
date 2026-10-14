@@ -17,6 +17,12 @@ handlers = set(re.findall(r'\b(?:Click|SelectionChanged|Checked|Unchecked|TextCh
 for handler in sorted(handlers):
     assert re.search(r'\b' + re.escape(handler) + r'\s*\(', code), f'WPF-Handler nicht gefunden: {handler}'
 print(f'PASS: {len(handlers)} WPF-Ereignishandler im Code referenziert')
+assert 'Click="InsertStopTemplate_Click"' in view
+assert 'string.Join(Environment.NewLine' in code
+assert 'STOP-Struktur enthält noch Platzhalter' in code
+assert 'h.Measures.Contains("...", StringComparison.Ordinal)' in code
+print('PASS: STOP-Editor und Abschlusspruefungsschutz enthalten')
+
 
 storage = (src / 'Services' / 'StorageService.cs').read_text(encoding='utf-8')
 create = re.search(r'create.CommandText = """(.*?)""";', storage, re.DOTALL)

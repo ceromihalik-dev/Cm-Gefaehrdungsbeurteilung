@@ -51,6 +51,9 @@ jobs:
             [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path).Path, [ref]$tokens, [ref]$errors) | Out-Null
             if ($errors.Count -gt 0) { throw "PowerShell syntax error in $path : $($errors -join '; ')" }
           }
+      - name: Validate catalog, XAML and SQLite migrations
+        shell: pwsh
+        run: python tests/Validate-Source.py
       - name: Verify version consistency
         shell: pwsh
         run: ./scripts/Test-VersionConsistency.ps1

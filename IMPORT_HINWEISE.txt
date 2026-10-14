@@ -1,0 +1,1 @@
+Quellcodeimport 0.1.3. ZIP im geklonten GitHub-Repository entpacken. Bestehende README.md und .github/workflows/windows-build.yml aus GitHub beibehalten. Vor dem Push git status prüfen. Keine bin/obj, Datenbanken oder Zertifikate enthalten.

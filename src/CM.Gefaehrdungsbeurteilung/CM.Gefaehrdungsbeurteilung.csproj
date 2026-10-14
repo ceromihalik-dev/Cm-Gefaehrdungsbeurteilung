@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CM.Gefaehrdungsbeurteilung</AssemblyName>
+    <RootNamespace>CM.Gefaehrdungsbeurteilung</RootNamespace>
+    <Version>0.1.3</Version>
+    <AssemblyVersion>0.1.3.0</AssemblyVersion>
+    <FileVersion>0.1.3.1</FileVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <!-- Nur ein Herausgeber-Build darf diesen Wert vor der Kompilierung festlegen.
+       SHA-1 Fingerabdruck ist Identifikator des bereits geprüften Authenticode-Zertifikats,
+       kein kryptografischer Hash des Installers. SHA-256 wird separat geprüft. -->
+  <ItemGroup Condition="'$(TrustedUpdateSignerThumbprint)' != ''">
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>CM.TrustedUpdateSignerThumbprint</_Parameter1>
+      <_Parameter2>$(TrustedUpdateSignerThumbprint)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+  </ItemGroup>
+</Project>

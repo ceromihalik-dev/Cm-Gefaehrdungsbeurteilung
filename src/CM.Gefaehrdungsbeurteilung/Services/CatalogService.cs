@@ -1,0 +1,27 @@
+using CM.Gefaehrdungsbeurteilung.Models;
+
+namespace CM.Gefaehrdungsbeurteilung.Services;
+
+public static class CatalogService
+{
+    // Erstfassungen zur Bearbeitung durch fachkundige Personen, KEINE geprüften Musterbeurteilungen.
+    public static IReadOnlyList<CatalogEntry> Entries { get; } = new List<CatalogEntry>
+    {
+        new("ALL-001", "Allgemein", "Elektrische Betriebsmittel / Feuchtigkeit", "Stromschlag durch nasse Leitungen, Kabel, Verteilungen und Arbeitsmittel.", "Spannungsfreiheit durch berechtigte Elektrofachkraft beurteilen lassen; geprüfte Geräte und geeignete Schutzmaßnahmen einsetzen; beschädigte Geräte außer Betrieb nehmen.", "ArbSchG; BetrSichV; DGUV Vorschrift 3"),
+        new("ALL-002", "Allgemein", "Stolpern, Rutschen, Stürzen", "Schläuche, Kabel, unebene und rutschige Arbeitsbereiche.", "Laufwege freihalten, Leitungen sichern, Arbeitsbereiche kennzeichnen und ausreichend beleuchten.", "ArbStättV; ASR A1.5"),
+        new("ALL-003", "Allgemein", "Staub und Atemwegsbelastung", "Staubfreisetzung bei Rückbau, Bohren oder Schleifen; mögliche schadstoffhaltige Altbaustoffe.", "Vorherige Schadstofferkundung veranlassen; staubarme Verfahren, Erfassung an der Quelle, Abschottung und geeignete persönliche Schutzausrüstung nach Beurteilung.", "GefStoffV; TRGS 400; TRGS 519/521/524 je nach Befund"),
+        new("ALL-004", "Allgemein", "Lärm und Vibration", "Belastung bei Einsatz von Trenn-, Bohr-, Abbruch- und Trocknungsgeräten.", "Lärmarme Geräte und Verfahren wählen, Exposition reduzieren, erforderlichen Gehörschutz festlegen.", "LärmVibrationsArbSchV"),
+        new("ALL-005", "Allgemein", "Manuelles Heben und Tragen", "Transport schwerer Trocknungsgeräte, Schutt oder Material in Treppenhäusern.", "Transporthilfen und Teamtransport prüfen, Lasten reduzieren, Verkehrswege vorbereiten.", "ArbSchG; LastenhandhabV"),
+        new("ALL-006", "Allgemein", "Arbeiten auf Leitern und Tritten", "Absturzrisiko bei Überkopfarbeiten und Zugang zu höher gelegenen Bereichen.", "Sichere Zugänge/Arbeitsmittel wählen; Leitern nur nach Eignungsprüfung und als nachrangige Lösung; Kontrolle vor Einsatz.", "BetrSichV; TRBS 2121 Teil 2"),
+        new("ALL-007", "Allgemein", "Geschädigte oder instabile Bauteile", "Gefährdungen durch unklare Tragfähigkeit, herabfallende Teile und verdeckte Schäden.", "Bereiche absperren, Standsicherheit durch zuständige Fachkundige klären und sichere Arbeitsabfolge planen; erforderliche Freigaben festhalten.", "ArbSchG; BaustellV"),
+        new("WAS-001", "Wasserschadensanierung", "Mikrobiologische Belastung", "Schimmel, Bakterien und gegebenenfalls kontaminierte Baustoffe nach Wassereintritt.", "Kontaminationsgrad fachkundig bestimmen; staubarme Verfahren, räumliche Abtrennung, geeignete Hygiene- und PSA-Maßnahmen festlegen.", "BioStoffV; TRBA 400; DGUV Information 201-028"),
+        new("WAS-002", "Wasserschadensanierung", "Verunreinigtes / fäkalienhaltiges Wasser", "Kontakt mit potenziell infektiösem Wasser und kontaminierten Oberflächen.", "Bereich absichern; fachkundige Beurteilung, Hygiene-/Dekontaminationsmaßnahmen und geeignete PSA; Verschleppung verhindern.", "BioStoffV; TRBA 400"),
+        new("WAS-003", "Wasserschadensanierung", "Dämmschichttrocknung / Luftströmungen", "Verteilung von Staub, Fasern oder Mikroorganismen durch Trocknungstechnik.", "Konstruktion und mögliche Kontamination vor Verfahrenswahl prüfen; erforderlichenfalls gefilterte Systeme und kontrollierte Luftführung nutzen.", "ArbSchG; BioStoffV; GefStoffV"),
+        new("WAS-004", "Wasserschadensanierung", "Bauteilöffnung / verdeckte Installationen", "Verletzungen und Leitungsbeschädigung bei Öffnung von Wand- und Bodenflächen.", "Installationsverlauf erkunden, Bereich sichern, geeignetes Werkzeug einsetzen und Schadstoffe vor Rückbau berücksichtigen.", "BetrSichV; GefStoffV"),
+        new("BRA-001", "Brandschadensanierung", "Ruß und Brandrückstände", "Gefahrstoffexposition durch Brandkondensate und kontaminierte Flächen.", "Brandumfang und Kontamination fachkundig einschätzen; Schutzbereich und Reinigungsverfahren festlegen; PSA und Hygiene nach Gefährdungsbeurteilung.", "GefStoffV; TRGS 400; VdS 2357"),
+        new("BRA-002", "Brandschadensanierung", "Unbekannte Schadstoffe / Asbestverdacht", "Schadstoffhaltige Produkte oder Verbrennungsprodukte im Sanierungsbereich.", "Schadstofferkundung und gegebenenfalls Probenahme; Arbeiten vor Klärung nicht beginnen; Fachbetrieb und zulässiges Verfahren nach Befund.", "GefStoffV; TRGS 519/521/524 nach Befund"),
+        new("BRA-003", "Brandschadensanierung", "Instabile Bauteile nach Brand", "Teilschäden an Tragwerk, Decken, Verkleidungen oder Installationen.", "Zutritt sperren; Standsicherheit und Freigabe durch geeignete Fachkundige prüfen lassen; Sicherungsmaßnahmen dokumentieren.", "ArbSchG; BaustellV"),
+        new("BRA-004", "Brandschadensanierung", "Dekontamination und Schwarz-Weiß-Trennung", "Kontaminationsverschleppung über Kleidung, Werkzeuge und Abfälle.", "Schwarz-Weiß-Bereiche, Hygieneschleuse und getrennte Material-/Abfallwege gemäß Gefährdungsbeurteilung vorsehen.", "GefStoffV; VdS 2357"),
+        new("BRA-005", "Brandschadensanierung", "Brandgeschädigte Elektroinstallation", "Verdeckte elektrische Gefahren trotz vermeintlich abgeschalteter Anlage.", "Anlage vor Beginn durch Elektrofachkraft bewerten und erforderliche sichere Abschaltung/Freigabe dokumentieren.", "DGUV Vorschrift 3; BetrSichV")
+    };
+}

@@ -1,0 +1,210 @@
+<Window x:Class="CM.Gefaehrdungsbeurteilung.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CM Gefährdungsbeurteilung" Height="850" Width="1350" MinWidth="1050" MinHeight="690"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource BackgroundBrush}" FontFamily="Segoe UI" FontSize="14">
+  <Grid>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="244"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <Border Background="#153A4B" Grid.Column="0">
+      <DockPanel Margin="18,22">
+        <StackPanel DockPanel.Dock="Bottom">
+          <TextBlock Text="Version 0.1.3  •  Entwicklungsstand" FontSize="11" Foreground="#B8CED8" TextWrapping="Wrap"/>
+          <TextBlock Text="Lokal / Offline" Foreground="#B8CED8" Margin="0,8,0,0" FontSize="12"/>
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="CM" Foreground="#9EDBE3" FontWeight="Bold" FontSize="27"/>
+          <TextBlock Text="Gefährdungsbeurteilung" Foreground="White" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,35"/>
+          <Button Content="▦   Übersicht" HorizontalContentAlignment="Left" Click="Dashboard_Click" Margin="0,0,0,8"/>
+          <Button Content="▤   Beurteilungen" HorizontalContentAlignment="Left" Click="Assessments_Click" Margin="0,0,0,8"/>
+          <Button Content="☷   Gefährdungskatalog" HorizontalContentAlignment="Left" Click="Catalog_Click" Margin="0,0,0,8"/>
+          <Button Content="⚙   Einstellungen" HorizontalContentAlignment="Left" Click="Settings_Click" Margin="0,0,0,8"/>
+          <Button Content="↻   Updates" HorizontalContentAlignment="Left" Click="Updates_Click" Margin="0,0,0,8"/>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+    <Grid Grid.Column="1" Margin="27,23,27,22">
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+      <DockPanel Margin="0,0,0,18">
+        <TextBlock x:Name="MainTitle" Style="{StaticResource Headline}" Text="Übersicht" DockPanel.Dock="Left"/>
+        <TextBlock Text="Wasser- und Brandschadensanierung" HorizontalAlignment="Right" Foreground="#62748A" VerticalAlignment="Center"/>
+      </DockPanel>
+
+      <!-- Übersicht -->
+      <ScrollViewer x:Name="DashboardView" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+          <TextBlock Text="Gefährdungsbeurteilungen bearbeiten und nachverfolgen." Foreground="#62748A" Margin="0,0,0,16"/>
+          <Grid Margin="0,0,0,18"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Style="{StaticResource Panel}" Margin="0,0,9,0"><StackPanel><TextBlock Text="GESAMT" Style="{StaticResource Caption}"/><TextBlock x:Name="DashboardTotal" Text="0" FontSize="34" FontWeight="SemiBold"/></StackPanel></Border>
+            <Border Grid.Column="1" Style="{StaticResource Panel}" Margin="5,0"><StackPanel><TextBlock Text="ENTWÜRFE" Style="{StaticResource Caption}"/><TextBlock x:Name="DashboardDrafts" Text="0" FontSize="34" FontWeight="SemiBold"/></StackPanel></Border>
+            <Border Grid.Column="2" Style="{StaticResource Panel}" Margin="9,0,0,0"><StackPanel><TextBlock Text="FACHLICH GEPRÜFT" Style="{StaticResource Caption}"/><TextBlock x:Name="DashboardReviewed" Text="0" FontSize="34" FontWeight="SemiBold"/></StackPanel></Border>
+          </Grid>
+          <StackPanel Orientation="Horizontal" Margin="0,0,0,15"><Button Content="+ Neue Gefährdungsbeurteilung" Click="New_Click"/><Button Content="Beurteilungen öffnen" Click="Assessments_Click"/></StackPanel>
+          <Border Style="{StaticResource Panel}"><StackPanel>
+            <TextBlock Text="Zuletzt bearbeitet" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,13"/>
+            <DataGrid x:Name="RecentGrid" Height="290" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" MouseDoubleClick="AssessmentGrid_DoubleClick" CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="None">
+              <DataGrid.Columns><DataGridTextColumn Header="Projektnummer" Binding="{Binding ProjectNumber}" Width="*"/><DataGridTextColumn Header="Schadensbereich" Binding="{Binding Area}" Width="*"/><DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="150"/><DataGridTextColumn Header="Bearbeitet" Binding="{Binding UpdatedDisplay}" Width="160"/></DataGrid.Columns>
+            </DataGrid>
+          </StackPanel></Border>
+          <TextBlock Text="Hinweis: Die Software unterstützt die Dokumentation, ersetzt jedoch keine fachkundige Prüfung und Freigabe vor Ort." Margin="0,14,0,0" Foreground="#856A32"/>
+        </StackPanel>
+      </ScrollViewer>
+
+      <!-- Projekte -->
+      <DockPanel x:Name="AssessmentsView" Grid.Row="1" Visibility="Collapsed">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,15"><Button Content="+ Neu" Click="New_Click"/><Button Content="Bearbeiten" Click="Edit_Click"/><Button Content="Löschen" Click="Delete_Click"/><Button Content="Aktualisieren" Click="Assessments_Click"/></StackPanel>
+        <Border Style="{StaticResource Panel}"><DataGrid x:Name="AssessmentsGrid" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" MouseDoubleClick="AssessmentGrid_DoubleClick" CanUserAddRows="False" GridLinesVisibility="None">
+          <DataGrid.Columns><DataGridTextColumn Header="Projekt" Binding="{Binding ProjectNumber}" Width="160"/><DataGridTextColumn Header="Objekt" Binding="{Binding SiteAddress}" Width="*"/><DataGridTextColumn Header="Bereich" Binding="{Binding Area}" Width="210"/><DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="140"/><DataGridTextColumn Header="Aktualisiert" Binding="{Binding UpdatedDisplay}" Width="155"/></DataGrid.Columns>
+        </DataGrid></Border>
+      </DockPanel>
+
+      <!-- Editor -->
+      <DockPanel x:Name="EditorView" Grid.Row="1" Visibility="Collapsed">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="0,12,0,0"><Button Content="Speichern" Click="Save_Click"/><Button Content="Drucken / PDF" Click="Print_Click"/><Button Content="Zur Übersicht" Click="Assessments_Click"/><TextBlock x:Name="EditorSavedInfo" Margin="12,9,0,0" Foreground="#62748A"/></StackPanel>
+        <Border Style="{StaticResource Panel}">
+          <TabControl x:Name="EditorTabs" BorderThickness="0">
+            <TabItem Header="1  Stammdaten" Padding="12,8">
+              <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="13" MaxWidth="900" HorizontalAlignment="Left">
+                <TextBlock Text="Projekt- und Objektangaben" FontSize="19" FontWeight="SemiBold" Margin="0,2,0,16"/>
+                <TextBlock Text="Projektnummer" Style="{StaticResource Label}"/><TextBox x:Name="ProjectNumberBox"/>
+                <TextBlock Text="Schadensobjekt / Anschrift" Style="{StaticResource Label}"/><TextBox x:Name="SiteAddressBox"/>
+                <TextBlock Text="Arbeitsbereich" Style="{StaticResource Label}"/><ComboBox x:Name="AreaBox" SelectionChanged="Area_Changed"><ComboBoxItem Content="Wasserschadensanierung"/><ComboBoxItem Content="Brandschadensanierung"/><ComboBoxItem Content="Allgemeine Sanierungsarbeiten"/></ComboBox>
+                <TextBlock Text="Sanierungstätigkeiten auswählen (Mehrfachauswahl)" Style="{StaticResource Label}"/>
+                <TextBlock Text="Die Auswahl schlägt passende Gefährdungen vor. Sie ersetzt keine objektbezogene Prüfung." Foreground="#62748A" FontSize="12" Margin="0,0,0,8"/>
+                <Border BorderBrush="#D9E4EA" BorderThickness="1" CornerRadius="6" Padding="9" Margin="0,0,0,7">
+                  <ScrollViewer Height="205" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="ActivityChoicesList">
+                      <ItemsControl.ItemTemplate><DataTemplate>
+                        <CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="Activity_Changed" Unchecked="Activity_Changed" Margin="2,5"/>
+                      </DataTemplate></ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </ScrollViewer>
+                </Border>
+                <TextBlock x:Name="ActivityInfo" Foreground="#62748A" Margin="0,0,0,8"/>
+                <Button Content="Passende Gefährdungen vorschlagen und übernehmen" Click="AddActivitySuggestions_Click" Width="365" Margin="0,0,0,12"/>
+                <TextBlock Text="Weitere geplante Arbeiten / Besonderheiten" Style="{StaticResource Label}"/><TextBox x:Name="WorkDescriptionBox" Height="95" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                <TextBlock Text="Verantwortliche / fachkundige Person" Style="{StaticResource Label}"/><TextBox x:Name="ResponsibleBox"/>
+                <TextBlock Text="Erst Gefährdungen und Maßnahmen erfassen, dann eine fachliche Prüfung dokumentieren." Foreground="#856A32" Margin="0,8,0,10"/>
+                <Button Content="Weiter: Objekt-Check →" Width="220" Click="NextToHazards_Click"/>
+              </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="2  Objekt-Check" Padding="12,8">
+              <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="14" MaxWidth="920" HorizontalAlignment="Left">
+                  <TextBlock Text="Objektspezifischer Sicherheitscheck" FontSize="19" FontWeight="SemiBold" Margin="0,2,0,12"/>
+                  <TextBlock Text="Bitte jede Frage bewusst mit Ja oder Nein beantworten. 'Ungeklärt' blockiert die Abschlussprüfung. Bei Ja: Befund dokumentieren, Gefährdung in den Maßnahmenkatalog aufnehmen und bei kritischen Risiken fachkundige Klärung nachweisen." TextWrapping="Wrap" Foreground="#62748A" Margin="0,0,0,13"/>
+                  <Border Background="#FFF7DF" CornerRadius="6" Padding="12" Margin="0,0,0,14">
+                    <TextBlock Text="STOPP-Regel: Bei Verdacht auf Asbest, fehlender elektrischer Freigabe oder unklarer Standsicherheit nicht allein auf Grundlage dieser Software mit Arbeiten beginnen." TextWrapping="Wrap"/>
+                  </Border>
+                  <ItemsControl x:Name="SiteChecksList">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Border BorderBrush="#D9E4EA" BorderThickness="0,0,0,1" Padding="0,9,0,13">
+                          <StackPanel>
+                            <TextBlock Text="{Binding Question}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,7"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                              <ComboBox Width="165" SelectedValuePath="Content" SelectedValue="{Binding Result, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="Screening_ComboChanged">
+                                <ComboBoxItem Content="Ungeklärt"/><ComboBoxItem Content="Nein"/><ComboBoxItem Content="Ja"/>
+                              </ComboBox>
+                              <CheckBox Margin="16,6,0,0" Content="Fachkundige Klärung dokumentiert" IsChecked="{Binding ExpertClarificationDocumented, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="Screening_CheckChanged" Unchecked="Screening_CheckChanged" IsEnabled="{Binding RequiresExpertClarification}"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="60" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextChanged="Screening_TextChanged" ToolTip="Befund, Fachperson, Datum, Nachweisnummer und vereinbarte Maßnahmen eintragen"/>
+                          </StackPanel>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <Button Content="Weiter: Gefährdungen →" Click="NextToHazardsFromScreening_Click" Width="224" Margin="0,15,0,0"/>
+                </StackPanel>
+              </ScrollViewer>
+            </TabItem>
+            <TabItem Header="3  Gefährdungen" Padding="12,8">
+              <Grid Margin="8,12"><Grid.ColumnDefinitions><ColumnDefinition Width="230"/><ColumnDefinition Width="240"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Margin="0,0,10,0"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                  <TextBlock Text="Katalogvorschläge" FontWeight="SemiBold" Margin="0,0,0,9"/>
+                  <ListBox x:Name="CatalogList" Grid.Row="1" DisplayMemberPath="Title"/>
+                  <Button Content="+ Auswahl übernehmen" Grid.Row="2" Margin="0,8,0,0" Click="AddHazard_Click"/>
+                </Grid>
+                <Grid Grid.Column="1" Margin="0,0,14,0"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                  <TextBlock Text="Im Projekt berücksichtigt" FontWeight="SemiBold" Margin="0,0,0,9"/>
+                  <ListBox x:Name="SelectedHazardsList" Grid.Row="1" DisplayMemberPath="Title" SelectionChanged="SelectedHazard_Changed"/>
+                  <Button Content="Eintrag entfernen" Grid.Row="2" Margin="0,8,0,0" Click="RemoveHazard_Click"/>
+                </Grid>
+                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto"><StackPanel x:Name="HazardDetailsPanel" IsEnabled="False">
+                  <TextBlock Text="Gefährdung bearbeiten" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                  <TextBlock Text="Titel" Style="{StaticResource Label}"/><TextBox x:Name="HazardTitleBox"/>
+                  <TextBlock Text="Beschreibung / mögliche Folgen" Style="{StaticResource Label}"/><TextBox x:Name="HazardDescriptionBox" Height="73" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                  <TextBlock Text="Schutzmaßnahmen (STOP-Prinzip beachten)" Style="{StaticResource Label}"/><TextBox x:Name="HazardMeasuresBox" Height="112" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                  <TextBlock Text="Orientierende Bewertung (1 = niedrig, 3 = hoch); keine rechtsverbindliche Einstufung" Foreground="#62748A" FontSize="12" Margin="0,0,0,7"/>
+                  <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,6,0"><TextBlock Text="Eintritt vorher" FontSize="12"/><ComboBox x:Name="BeforePBox"><ComboBoxItem Content="1"/><ComboBoxItem Content="2"/><ComboBoxItem Content="3"/></ComboBox></StackPanel>
+                    <StackPanel Grid.Column="1" Margin="0,0,6,0"><TextBlock Text="Schwere vorher" FontSize="12"/><ComboBox x:Name="BeforeSBox"><ComboBoxItem Content="1"/><ComboBoxItem Content="2"/><ComboBoxItem Content="3"/></ComboBox></StackPanel>
+                    <StackPanel Grid.Column="2" Margin="0,0,6,0"><TextBlock Text="Eintritt nachher" FontSize="12"/><ComboBox x:Name="AfterPBox"><ComboBoxItem Content="1"/><ComboBoxItem Content="2"/><ComboBoxItem Content="3"/></ComboBox></StackPanel>
+                    <StackPanel Grid.Column="3"><TextBlock Text="Schwere nachher" FontSize="12"/><ComboBox x:Name="AfterSBox"><ComboBoxItem Content="1"/><ComboBoxItem Content="2"/><ComboBoxItem Content="3"/></ComboBox></StackPanel>
+                  </Grid>
+                  <TextBlock Text="Zuständig" Style="{StaticResource Label}"/><TextBox x:Name="HazardOwnerBox"/>
+                  <TextBlock Text="Umsetzung bis" Style="{StaticResource Label}"/><DatePicker x:Name="HazardDuePicker"/>
+                  <CheckBox x:Name="EffectivenessCheck" Content="Wirksamkeit wurde kontrolliert" Margin="0,8,0,15"/>
+                  <Button Content="Änderungen im Eintrag übernehmen" Click="ApplyHazard_Click"/>
+                </StackPanel></ScrollViewer>
+              </Grid>
+            </TabItem>
+            <TabItem Header="4  Prüfung und Abschluss" Padding="12,8">
+              <ScrollViewer><StackPanel Margin="14" MaxWidth="860" HorizontalAlignment="Left">
+                <TextBlock Text="Prüfung und Freigabe" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,18"/>
+                <Border Background="#FFF7DF" CornerRadius="6" Padding="15" Margin="0,0,0,18"><TextBlock Text="Katalogeinträge sind editierbare Vorschläge. Besondere Gefahrstoffe, Asbest, kontaminierte Brandbereiche und unklare Standsicherheit erfordern eine gesonderte fachkundige Beurteilung. Eine reine Risikozahl ist keine Freigabe." TextWrapping="Wrap"/></Border>
+                <TextBlock x:Name="ReviewSummary" Text="Noch keine Beurteilung geladen." Margin="0,0,0,18" FontWeight="SemiBold"/>
+                <CheckBox x:Name="ReviewConfirmation" Margin="0,0,0,17"><TextBlock Text="Ich bestätige als verantwortliche fachkundige Person, dass die Gefährdungen und Maßnahmen für diesen konkreten Einsatz geprüft und angepasst wurden." TextWrapping="Wrap"/></CheckBox>
+                <Button Content="Fachliche Prüfung dokumentieren" Click="Review_Click" Width="280"/>
+                <TextBlock Text="Eine dokumentierte Prüfung ersetzt weder eine erforderliche Unterweisung noch ggf. vorgeschriebene Freigaben/Nachweise." Foreground="#62748A" Margin="0,16,0,0"/>
+              </StackPanel></ScrollViewer>
+            </TabItem>
+          </TabControl>
+        </Border>
+      </DockPanel>
+
+      <!-- Katalog -->
+      <Border x:Name="CatalogView" Grid.Row="1" Visibility="Collapsed" Style="{StaticResource Panel}">
+        <DockPanel><TextBlock DockPanel.Dock="Top" Text="Startkatalog mit bearbeitbaren Beispielen. Die Einträge sind nicht fachlich freigegeben und müssen objektbezogen geprüft werden." Foreground="#856A32" Margin="0,0,0,16"/>
+          <DataGrid x:Name="CatalogGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="None"><DataGrid.Columns>
+            <DataGridTextColumn Header="Kennung" Binding="{Binding Id}" Width="85"/><DataGridTextColumn Header="Bereich" Binding="{Binding Area}" Width="180"/><DataGridTextColumn Header="Gefährdung" Binding="{Binding Title}" Width="*"/><DataGridTextColumn Header="Rechtsbezug (Prüfhinweis)" Binding="{Binding Reference}" Width="250"/>
+          </DataGrid.Columns></DataGrid>
+        </DockPanel>
+      </Border>
+
+      <!-- Einstellungen -->
+      <ScrollViewer x:Name="SettingsView" Grid.Row="1" Visibility="Collapsed" VerticalScrollBarVisibility="Auto"><StackPanel>
+        <Border Style="{StaticResource Panel}" Margin="0,0,0,15"><StackPanel>
+          <TextBlock Text="Firmenstammdaten" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,12"/>
+          <TextBlock Text="Firmenname" Style="{StaticResource Label}"/><TextBox x:Name="CompanyBox"/>
+          <TextBlock Text="Firmenlogo (PNG, JPEG oder BMP; lokale Kopie in Programmdaten)" Style="{StaticResource Label}"/>
+          <StackPanel Orientation="Horizontal"><TextBox x:Name="LogoPathBox" IsReadOnly="True" Width="525"/><Button Content="Logo wählen…" Click="ChooseLogo_Click"/></StackPanel>
+          <TextBlock Text="Anschrift / Kontakt" Style="{StaticResource Label}"/><TextBox x:Name="CompanyAddressBox" Height="65" TextWrapping="Wrap" AcceptsReturn="True"/>
+        </StackPanel></Border>
+        <Border Style="{StaticResource Panel}" Margin="0,0,0,15"><StackPanel>
+          <TextBlock Text="Updatequelle (GitHub Releases)" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,12"/>
+          <TextBlock Text="GitHub-Konto / Organisation" Style="{StaticResource Label}"/><TextBox x:Name="RepoOwnerBox"/>
+          <TextBlock Text="Repository" Style="{StaticResource Label}"/><TextBox x:Name="RepoNameBox"/>
+          <TextBlock Text="Vertrauenswürdiger Herausgeber" Style="{StaticResource Label}"/>
+          <TextBlock x:Name="TrustedPublisherText" Foreground="#556D7A" TextWrapping="Wrap" Margin="0,1,0,8"/>
+          <CheckBox x:Name="AutoCheckUpdatesCheckBox" Margin="0,8,0,14" Content="Beim Start automatisch nach Updates suchen (höchstens einmal täglich)"/>
+          <TextBlock Text="Die Herausgeberidentität wird beim offiziellen Programm-Build fest hinterlegt und kann hier nicht geändert werden. Ohne vertrauenswürdige, signierte Releases ist nur die Updateprüfung möglich." Foreground="#856A32"/>
+        </StackPanel></Border>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15"><Button Content="Einstellungen speichern" Click="SaveSettings_Click"/><Button Content="Jetzt Datensicherung erstellen" Click="Backup_Click"/></StackPanel>
+        <TextBlock x:Name="DatabasePathText" Foreground="#62748A" TextWrapping="Wrap"/>
+      </StackPanel></ScrollViewer>
+
+      <!-- Updates -->
+      <ScrollViewer x:Name="UpdatesView" Grid.Row="1" Visibility="Collapsed"><StackPanel>
+        <Border Style="{StaticResource Panel}"><StackPanel>
+          <TextBlock Text="Programmaktualisierung" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,16"/>
+          <TextBlock Text="Installiert: 0.1.3 / Build 0001" FontSize="16" Margin="0,0,0,7"/>
+          <TextBlock x:Name="UpdateSourceText" Text="Updatequelle: nicht eingerichtet" Foreground="#62748A" Margin="0,0,0,15"/>
+          <StackPanel Orientation="Horizontal" Margin="0,0,0,16"><Button x:Name="CheckUpdateButton" Content="Auf Updates prüfen" Click="CheckUpdate_Click"/><Button x:Name="OpenReleaseButton" Content="Releaseseite öffnen" IsEnabled="False" Click="OpenRelease_Click"/><Button x:Name="InstallUpdateButton" Content="Verifiziertes Update installieren" IsEnabled="False" Click="InstallUpdate_Click"/></StackPanel>
+          <TextBlock x:Name="UpdateStatus" Text="Es wurde noch nicht nach einer neuen Version gesucht." Margin="0,0,0,15"/>
+          <TextBox x:Name="UpdateNotes" IsReadOnly="True" Height="215" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+          <TextBlock Text="Automatische Installation nur mit überprüfter SHA-256-Prüfsumme und gültiger Authenticode-Signatur des beim Erstellen der Software fest hinterlegten Herausgebers. Ansonsten nur manuelle Aktualisierung." Foreground="#62748A"/>
+        </StackPanel></Border>
+      </StackPanel></ScrollViewer>
+    </Grid>
+  </Grid>
+</Window>

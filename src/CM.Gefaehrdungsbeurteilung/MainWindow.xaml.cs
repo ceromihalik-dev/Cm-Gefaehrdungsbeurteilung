@@ -393,18 +393,20 @@ public partial class MainWindow : Window
         const string heading = "STOP-Prüfung (objektspezifisch ergänzen):";
         if (HazardMeasuresBox.Text.Contains(heading, StringComparison.Ordinal))
         {
-            Hint("Die STOP-Struktur ist bereits vorhanden. Bitte die einzelnen Maßnahmen bearbeiten.");
+            Hint("Die STOP-Struktur ist bereits vorhanden.");
             return;
         }
-        const string template = "STOP-Prüfung (objektspezifisch ergänzen):\\n" +
-            "S – Substitution: prüfen / begründen: ...\\n" +
-            "T – Technisch: ...\\n" +
-            "O – Organisatorisch: ...\\n" +
-            "P – Persönliche Schutzausrüstung: ...";
+        string template = string.Join(Environment.NewLine, new[]
+        {
+            heading,
+            "S – Substitution: prüfen / begründen: ...",
+            "T – Technisch: ...",
+            "O – Organisatorisch: ...",
+            "P – Persönliche Schutzausrüstung: ..."
+        });
         var existing = HazardMeasuresBox.Text.Trim();
         HazardMeasuresBox.Text = string.IsNullOrWhiteSpace(existing)
-            ? template.Replace("\\\\n", Environment.NewLine)
-            : existing + Environment.NewLine + Environment.NewLine + template.Replace("\\\\n", Environment.NewLine);
+            ? template : existing + Environment.NewLine + Environment.NewLine + template;
         MarkDraft();
         EditorSavedInfo.Text = "STOP-Struktur ergänzt – fachlich ausfüllen und speichern.";
     }
@@ -455,9 +457,9 @@ public partial class MainWindow : Window
             return;
         }
         if (_current.Hazards.Any(h => h.Measures.Contains("STOP-Prüfung (objektspezifisch ergänzen):", StringComparison.Ordinal) &&
-            h.Measures.Split('\\n').Any(line => line.TrimEnd().EndsWith("...", StringComparison.Ordinal))))
+            h.Measures.Contains("...", StringComparison.Ordinal)))
         {
-            Hint("Die STOP-Struktur enthält noch Platzhalter. Bitte für jede Kategorie eine konkrete Maßnahme oder eine fachlich begründete Nichtanwendbarkeit eintragen.");
+            Hint("Die STOP-Struktur enthält noch Platzhalter. Bitte jede Kategorie konkret ausfüllen oder die Nichtanwendbarkeit fachlich begründen.");
             EditorTabs.SelectedIndex = 2;
             return;
         }

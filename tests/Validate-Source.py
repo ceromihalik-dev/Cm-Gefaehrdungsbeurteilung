@@ -106,7 +106,16 @@ assert 'TrustedUpdateSignerThumbprint' in project_xml
 assert 'GetCustomAttributes<AssemblyMetadataAttribute>' in update
 assert 'CanAutoInstall' in update and 'Get-AuthenticodeSignature' in update
 assert 'repo.signerThumbprint' not in window and 'CertThumbprintBox' not in window
-assert 'UpdateService.TrustedSignerThumbprint' in window
+assert 'ImportUpdateFile_Click' in window
+assert 'LocalUpdateService.InspectAsync' in window
+assert 'LocalUpdateService.ExtractVerifiedAsync' in window
+assert 'vor-datei-update' in window
+assert 'MainWindow_Loaded' not in window
+local_update = (src / 'Services' / 'LocalUpdateService.cs').read_text(encoding='utf-8')
+assert '.cmupdate' in local_update and 'SHA256.HashDataAsync' in local_update
+assert 'Die Update-Datei enthält keine neuere Programmversion' in local_update
+assert (root / 'scripts' / 'New-UpdatePackage.py').exists()
+assert (root / 'tests' / 'Validate-UpdatePackage.py').exists()
 assert '500L * 1024 * 1024' in update
 assert 'Installername stimmt nicht mit der Releaseversion' in update
 assert 'Setup und Prüfsumme stammen nicht aus demselben GitHub-Release' in update
@@ -117,4 +126,4 @@ assert 'release.Version <= CurrentVersion' in update
 assert (root / 'scripts' / 'Test-VersionConsistency.ps1').exists()
 assert (root / 'scripts' / 'Prepare-SignedRelease.ps1').exists()
 print('PASS: Versionsvertrag, Installer-AppId, Sicherung der Update-Vertrauenskette und CI-Testskripte')
-print('OFFEN: Echter Windows-WPF-Build, Installationsablauf und signiertes Online-Update.')
+print('OFFEN: Windows-WPF-Build, lokaler Dateiuptate-Test und Authentizitaetsgarantie unsignierter Pakete.')

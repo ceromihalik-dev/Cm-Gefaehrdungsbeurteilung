@@ -41,6 +41,9 @@ jobs:
           foreach ($file in $required) {
             if (-not (Test-Path $file)) { throw "Required source missing: $file" }
           }
+      - name: Verify version consistency
+        shell: pwsh
+        run: ./scripts/Test-VersionConsistency.ps1
       - name: Locate or install Inno Setup
         shell: pwsh
         run: |

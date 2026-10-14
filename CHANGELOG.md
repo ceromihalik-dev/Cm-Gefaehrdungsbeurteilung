@@ -1,5 +1,14 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.5 / Build 0001 – 14.10.2026
+**Status: Quellcode und Katalog-Fachprüfung erstellt; Windows-Build und fachkundige Freigabe noch ausstehend.**
+
+- Katalog um fünf Einträge auf insgesamt 21 ergänzt (verdeckte Installationen, Trocknungsgeräte, belastete Trocknungsluft und Filter, Löschwasser, Brandrückstandsstaub).
+- Neue Einträge passenden Sanierungstätigkeiten zugeordnet.
+- Fachliche Einzelprüfung aller 21 Katalogpositionen mit Risikoschwerpunkten, Quellen und erforderlichen Ergänzungen dokumentiert: docs/FACHPRUEFUNG_KATALOG_2026-10-14.md.
+- Datenbankschema unverändert 3. Neue Katalogpositionen werden als Vorschläge bereitgestellt; vorhandene Beurteilungen werden nicht automatisch verändert.
+- Katalogvorschläge sind ausdrücklich keine fachkundige Freigabe.
+
 ## 0.1.4 / Build 0001 – 14.10.2026
 **Status: Entwicklungsstand; GitHub-CI und Upgradeprüfung noch ausstehend.**
 

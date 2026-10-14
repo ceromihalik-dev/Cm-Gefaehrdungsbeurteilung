@@ -77,6 +77,12 @@ jobs:
       - name: Build unsigned Windows Setup
         shell: pwsh
         run: ./scripts/Build-Setup.ps1 -ISCC "$env:ISCC_PATH"
+      - name: Create offline update file (.cmupdate)
+        shell: pwsh
+        run: python scripts/New-UpdatePackage.py
+      - name: Validate offline update package
+        shell: pwsh
+        run: python tests/Validate-UpdatePackage.py
       - name: Create SHA-256 checksum
         shell: pwsh
         run: |
@@ -88,7 +94,7 @@ jobs:
       - name: Upload unsigned test setup
         uses: actions/upload-artifact@v4
         with:
-          name: CM-Gefaehrdungsbeurteilung-unsigned-test-setup
+          name: CM-Gefaehrdungsbeurteilung-offline-update-and-setup
           path: release/*
           if-no-files-found: error
           retention-days: 14

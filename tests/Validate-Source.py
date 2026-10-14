@@ -1,4 +1,4 @@
-"""Quellcode-Pruefungen fuer 0.1.3; kein Ersatz fuer einen Windows-WPF-Build."""
+"""Versionsunabhaengige statische Projektpruefung; ersetzt keinen WPF-Windows-Build."""
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import re
@@ -86,9 +86,15 @@ installer = (root / 'installer' / 'Setup.iss').read_text(encoding='utf-8')
 update = (src / 'Services' / 'UpdateService.cs').read_text(encoding='utf-8')
 window = (src / 'MainWindow.xaml.cs').read_text(encoding='utf-8')
 setup_script = (root / 'scripts' / 'Build-Setup.ps1').read_text(encoding='utf-8')
-for source in (project_xml, installer, setup_script):
-    assert '0.1.3' in source, 'Inkonsequente Versionsangabe'
-assert 'VersionInfoVersion=0.1.3.1' in installer
+version_match = re.search(r'<Version>(\d+\.\d+\.\d+)</Version>', project_xml)
+assert version_match, 'Projektversion fehlt'
+version = version_match.group(1)
+assert f'<AssemblyVersion>{version}.0</AssemblyVersion>' in project_xml
+file_version_match = re.search(r'<FileVersion>(\d+\.\d+\.\d+\.\d+)</FileVersion>', project_xml)
+assert file_version_match and file_version_match.group(1).startswith(version + '.')
+assert f'#define MyAppVersion "{version}"' in installer
+assert f'VersionInfoVersion={file_version_match.group(1)}' in installer
+assert 'Test-VersionConsistency.ps1' in setup_script
 assert 'AppId={{2836B6AC-8645-4A47-B1EE-C5840ECF1E07}' in installer
 assert 'TrustedUpdateSignerThumbprint' in project_xml
 assert 'GetCustomAttributes<AssemblyMetadataAttribute>' in update
@@ -96,7 +102,7 @@ assert 'CanAutoInstall' in update and 'Get-AuthenticodeSignature' in update
 assert 'repo.signerThumbprint' not in window and 'CertThumbprintBox' not in window
 assert 'UpdateService.TrustedSignerThumbprint' in window
 assert '500L * 1024 * 1024' in update
-assert (root / 'scripts' / 'Test-Installer.ps1').exists()
+assert (root / 'scripts' / 'Test-VersionConsistency.ps1').exists()
 assert (root / 'scripts' / 'Prepare-SignedRelease.ps1').exists()
 print('PASS: Versionsvertrag, Installer-AppId, Sicherung der Update-Vertrauenskette und CI-Testskripte')
 print('OFFEN: Echter Windows-WPF-Build, Installationsablauf und signiertes Online-Update.')

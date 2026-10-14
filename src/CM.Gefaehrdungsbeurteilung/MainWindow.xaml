@@ -180,33 +180,27 @@
           <StackPanel Orientation="Horizontal"><TextBox x:Name="LogoPathBox" IsReadOnly="True" Width="525"/><Button Content="Logo wählen…" Click="ChooseLogo_Click"/></StackPanel>
           <TextBlock Text="Anschrift / Kontakt" Style="{StaticResource Label}"/><TextBox x:Name="CompanyAddressBox" Height="65" TextWrapping="Wrap" AcceptsReturn="True"/>
         </StackPanel></Border>
-        <Border Style="{StaticResource Panel}" Margin="0,0,0,15"><StackPanel>
-          <TextBlock Text="Updatequelle (GitHub Releases)" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,12"/>
-          <TextBlock Text="GitHub-Konto / Organisation" Style="{StaticResource Label}"/><TextBox x:Name="RepoOwnerBox"/>
-          <TextBlock Text="Repository" Style="{StaticResource Label}"/><TextBox x:Name="RepoNameBox"/>
-          <TextBlock Text="Vertrauenswürdiger Herausgeber" Style="{StaticResource Label}"/>
-          <TextBlock x:Name="TrustedPublisherText" Foreground="#556D7A" TextWrapping="Wrap" Margin="0,1,0,8"/>
-          <CheckBox x:Name="AutoCheckUpdatesCheckBox" Margin="0,8,0,14" Content="Beim Start automatisch nach Updates suchen (höchstens einmal täglich)"/>
-          <TextBlock Text="Die Herausgeberidentität wird beim offiziellen Programm-Build fest hinterlegt und kann hier nicht geändert werden. Ohne vertrauenswürdige, signierte Releases ist nur die Updateprüfung möglich." Foreground="#856A32"/>
-        </StackPanel></Border>
         <StackPanel Orientation="Horizontal" Margin="0,0,0,15"><Button Content="Einstellungen speichern" Click="SaveSettings_Click"/><Button Content="Jetzt Datensicherung erstellen" Click="Backup_Click"/></StackPanel>
         <TextBlock x:Name="DatabasePathText" Foreground="#62748A" TextWrapping="Wrap"/>
       </StackPanel></ScrollViewer>
 
-      <!-- Updates -->
-      <ScrollViewer x:Name="UpdatesView" Grid.Row="1" Visibility="Collapsed"><StackPanel>
-        <Border Style="{StaticResource Panel}"><StackPanel>
-          <TextBlock Text="Programmaktualisierung" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,16"/>
-          <TextBlock x:Name="InstalledVersionText" Text="Installierte Version wird geladen" FontSize="16" Margin="0,0,0,7"/>
-          <TextBlock x:Name="UpdateSourceText" Text="Updatequelle: nicht eingerichtet" Foreground="#62748A" Margin="0,0,0,15"/>
-          <StackPanel Orientation="Horizontal" Margin="0,0,0,16"><Button x:Name="CheckUpdateButton" Content="Auf Updates prüfen" Click="CheckUpdate_Click"/><Button x:Name="OpenReleaseButton" Content="Releaseseite öffnen" IsEnabled="False" Click="OpenRelease_Click"/><Button x:Name="InstallUpdateButton" Content="Verifiziertes Update installieren" IsEnabled="False" Click="InstallUpdate_Click"/></StackPanel>
-          <Button Content="GitHub-Testversionen (Artifacts) öffnen" HorizontalAlignment="Left" Click="OpenTestBuilds_Click" Margin="0,0,0,10"/>
-          <TextBlock Text="Testversionen aus GitHub Actions müssen manuell heruntergeladen und installiert werden. Die automatische Updateprüfung berücksichtigt ausschließlich veröffentlichte GitHub Releases." TextWrapping="Wrap" Foreground="#62748A" Margin="0,0,0,12"/>
-          <TextBlock x:Name="UpdateStatus" Text="Es wurde noch nicht nach einer neuen Version gesucht." Margin="0,0,0,15"/>
-          <TextBox x:Name="UpdateNotes" IsReadOnly="True" Height="215" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-          <TextBlock Text="Automatische Installation nur mit überprüfter SHA-256-Prüfsumme und gültiger Authenticode-Signatur des beim Erstellen der Software fest hinterlegten Herausgebers. Ansonsten nur manuelle Aktualisierung." Foreground="#62748A"/>
-        </StackPanel></Border>
-      </StackPanel></ScrollViewer>
+      <!-- Offline updates: intentional manual file selection, no internet required -->
+      <ScrollViewer x:Name="UpdatesView" Grid.Row="1" Visibility="Collapsed">
+        <StackPanel>
+          <Border Style="{StaticResource Panel}">
+            <StackPanel>
+              <TextBlock Text="Programmaktualisierung über Update-Datei" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,16"/>
+              <TextBlock x:Name="InstalledVersionText" Text="Installierte Version wird geladen" FontSize="16" Margin="0,0,0,7"/>
+              <TextBlock x:Name="UpdateSourceText" Text="Updatequelle: lokale Datei (.cmupdate)" Foreground="#62748A" Margin="0,0,0,15"/>
+              <TextBlock Text="Lade die passende .cmupdate-Datei herunter oder kopiere sie von einem USB-Stick. Das Programm prüft Version und SHA-256 vor der manuellen Installation." TextWrapping="Wrap" Margin="0,0,0,14"/>
+              <Button Content="Update-Datei auswählen und prüfen ..." Click="ImportUpdateFile_Click" HorizontalAlignment="Left" Margin="0,0,0,12"/>
+              <TextBlock x:Name="UpdateStatus" Text="Keine Update-Datei ausgewählt." TextWrapping="Wrap" Margin="0,0,0,15"/>
+              <TextBox x:Name="UpdateNotes" IsReadOnly="True" Height="180" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+              <TextBlock Text="Wichtig: Die Prüfsumme erkennt Dateifehler, bestätigt aber nicht den Herausgeber. Unsignierte Update-Dateien nur aus einer selbst überprüften, vertrauenswürdigen Quelle importieren. Jede Installation benötigt eine ausdrückliche Bestätigung." TextWrapping="Wrap" Foreground="#856A32" Margin="0,12,0,0"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </ScrollViewer>
     </Grid>
   </Grid>
 </Window>

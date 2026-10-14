@@ -1,5 +1,13 @@
 # Änderungsverlauf – CM Gefährdungsbeurteilung
 
+## 0.1.6 / Build 0001 – 14.10.2026
+**Status: Release-Vorbereitung, ohne signierte Freigabe und ohne bestätigten Windows-Test.**
+
+- Signiertes Release-Vorbereitungsskript prüft Installername anhand der aktuellen Projektversion statt der alten festen Version 0.1.3.
+- Prüfskript verlangt gültige Authenticode-Herausgebersignatur und erzeugt SHA256SUMS.txt erst nach erfolgreicher Kontrolle.
+- GitHub Actions erzeugt weiterhin nur unsignierte manuelle Test-Artefakte. Automatische In-App-Installation wird erst für signierte, veröffentlichte Releases aktiviert.
+- Datenbankschema unverändert 3.
+
 ## 0.1.5 / Build 0001 – 14.10.2026
 **Status: Quellcode und Katalog-Fachprüfung erstellt; Windows-Build und fachkundige Freigabe noch ausstehend.**
 

@@ -454,6 +454,13 @@ public partial class MainWindow : Window
             Hint("Prüfung noch nicht möglich: Projekt, Objekt, mindestens eine Tätigkeit, verantwortliche Person, Gefährdungen und Maßnahmen/Zuständigkeiten vervollständigen; hohe Restrisiken fachlich klären.");
             return;
         }
+        if (_current.Hazards.Any(h => h.Measures.Contains("STOP-Prüfung (objektspezifisch ergänzen):", StringComparison.Ordinal) &&
+            h.Measures.Split('\\n').Any(line => line.TrimEnd().EndsWith("...", StringComparison.Ordinal))))
+        {
+            Hint("Die STOP-Struktur enthält noch Platzhalter. Bitte für jede Kategorie eine konkrete Maßnahme oder eine fachlich begründete Nichtanwendbarkeit eintragen.");
+            EditorTabs.SelectedIndex = 2;
+            return;
+        }
         if (ReviewConfirmation.IsChecked != true) { Hint("Die Bestätigung durch die verantwortliche fachkundige Person fehlt."); return; }
         _current.Status = "Fachlich geprüft";
         _current.ReviewedUtc = DateTime.UtcNow;

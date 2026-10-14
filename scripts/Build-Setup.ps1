@@ -36,7 +36,7 @@ if (-not $ISCC -or -not (Test-Path $ISCC)) {
 
 $xml = [xml](Get-Content -LiteralPath $project -Raw)
 $version = $xml.Project.PropertyGroup.Version
-if ($version -ne '0.1.5') { throw "Projektversion unerwartet: $version" }
+if ($version -ne '0.1.6') { throw "Projektversion unerwartet: $version" }
 $exeName = "CM-Gefaehrdungsbeurteilung-Setup-$version.exe"
 $expectedInstaller = Join-Path $root "release\$exeName"
 if (Test-Path $expectedInstaller) { Remove-Item $expectedInstaller -Force }

@@ -70,7 +70,8 @@ public static class LocalUpdateService
         await using var file = new FileStream(packagePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         if (file.Length > MaxInstallerSize + 2 * 1024 * 1024)
             throw new InvalidDataException("Update-Datei ist zu groß.");
-        using var package = OpenPackage(file);
+        var package = OpenPackage(file);
+        using var archive = package.Archive;
         await using (var setupStream = package.Installer.Open())
         {
             var sum = Convert.ToHexString(await SHA256.HashDataAsync(setupStream));
@@ -93,7 +94,8 @@ public static class LocalUpdateService
         try
         {
             await using var file = new FileStream(info.PackagePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            using var package = OpenPackage(file);
+            var package = OpenPackage(file);
+        using var archive = package.Archive;
             if (package.Manifest.Version != $"{info.Version.Major}.{info.Version.Minor}.{info.Version.Build}" ||
                 !string.Equals(package.Manifest.Sha256, info.Sha256, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException("Die Update-Datei wurde seit der Prüfung verändert.");
